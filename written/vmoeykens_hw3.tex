@@ -1,0 +1,266 @@
+\documentclass{article}
+
+\usepackage{fancyhdr}
+\usepackage{extramarks}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{tikz}
+\usepackage[plain]{algorithm}
+\usepackage{algpseudocode}
+\usepackage{enumitem}
+\usetikzlibrary{automata,positioning}
+
+%
+% Basic Document Settings
+%
+
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\linespread{1.1}
+
+\pagestyle{fancy}
+\lhead{\hmwkAuthorName}
+\chead{\hmwkClass: \hmwkTitle}
+\rhead{\firstxmark}
+\lfoot{\lastxmark}
+\cfoot{\thepage}
+
+\renewcommand\headrulewidth{0.4pt}
+\renewcommand\footrulewidth{0.4pt}
+
+\setlength\parindent{0pt}
+
+%
+% Create Problem Sections
+%
+
+\newcommand{\enterProblemHeader}[1]{
+    \nobreak\extramarks{}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+    \nobreak\extramarks{Problem \arabic{#1} (continued)}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+}
+
+\newcommand{\exitProblemHeader}[1]{
+    \nobreak\extramarks{Problem \arabic{#1} (continued)}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+    \stepcounter{#1}
+    \nobreak\extramarks{Problem \arabic{#1}}{}\nobreak{}
+}
+
+\setcounter{secnumdepth}{0}
+\newcounter{partCounter}
+\newcounter{homeworkProblemCounter}
+\setcounter{homeworkProblemCounter}{1}
+
+%
+% Homework Problem Environment
+%
+% This environment takes an optional argument. When given, it will adjust the
+% problem counter. This is useful for when the problems given for your
+% assignment aren't sequential. See the last 3 problems of this template for an
+% example.
+%
+\newenvironment{homeworkProblem}[1][-1]{
+    \ifnum#1>0
+        \setcounter{homeworkProblemCounter}{#1}
+    \fi
+    \section{Problem \arabic{homeworkProblemCounter}}
+    \setcounter{partCounter}{1}
+    \enterProblemHeader{homeworkProblemCounter}
+}{
+    \exitProblemHeader{homeworkProblemCounter}
+}
+
+%
+% Homework Details
+%   - Title
+%   - Due date
+%   - Class
+%   - Section/Time
+%   - Instructor
+%   - Author
+%
+
+\newcommand{\hmwkTitle}{Homework\ \#3}
+\newcommand{\hmwkDueDate}{November 14, 2021}
+\newcommand{\hmwkClass}{Programming Languages}
+\newcommand{\hmwkClassInstructor}{Professor Christian Skalka}
+\newcommand{\hmwkAuthorName}{\textbf{Vincent Moeykens}}
+
+%
+% Title Page
+%
+
+\title{
+    \vspace{2in}
+    \textmd{\textbf{\hmwkClass:\ \hmwkTitle}}\\
+    \normalsize\vspace{0.1in}\small{Due\ on\ \hmwkDueDate}\\
+    \vspace{0.1in}\large{\textit{\hmwkClassInstructor}}
+    \vspace{3in}
+}
+
+\author{\hmwkAuthorName}
+\date{}
+
+\renewcommand{\part}[1]{\textbf{\large Part \Alph{partCounter}}\stepcounter{partCounter}\\}
+
+%
+% Various Helper Commands
+%
+
+% Useful for algorithms
+\newcommand{\alg}[1]{\textsc{\bfseries \footnotesize #1}}
+
+% For derivatives
+\newcommand{\deriv}[1]{\frac{\mathrm{d}}{\mathrm{d}x} (#1)}
+
+% For partial derivatives
+\newcommand{\pderiv}[2]{\frac{\partial}{\partial #1} (#2)}
+
+% Integral dx
+\newcommand{\dx}{\mathrm{d}x}
+
+% Alias for the Solution section header
+\newcommand{\solution}{\textbf{\large Solution}}
+
+% Probability commands: Expectation, Variance, Covariance, Bias
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\Bias}{\mathrm{Bias}}
+
+\begin{document}
+
+% \maketitle
+
+\pagebreak
+
+\begin{homeworkProblem}
+    \textbf{Question:}
+    Provide a screen shot of the OCaml editor and interpreter combination you are using for the class.
+
+    \textbf{Solution:}
+		My editor is Vim and I am using \verb|utop| on the command line as my interpreter.
+	
+\end{homeworkProblem}
+% ---------------------------------------------------------------------------------- %
+\begin{homeworkProblem}
+    \textbf{Question:}
+For each of the following expressions e, decide whether a type can be assigned to $e$. If you think $e$ is typable, specify $\tau$ such that $e : \tau$ , and also specify $v$ such that $e \Downarrow v;$ otherwise, briefly explain why e cannot be typed.
+
+    \textbf{Solution:}
+		\begin{enumerate}[label=\alph*.]
+			\item This expression is typable. $\tau=$ \verb|bool|, $v=$ \verb|true|.
+			\item This expression is typable. $\tau=$ \verb|int|, $v=$ \verb|13|.
+			\item This expression is not typable because it is trying to use the \verb|+| operator with an \verb|int| and a \verb|float| when it requires two \verb|int|s.
+			\item This expression is not typable because it is trying to use the \verb+||+ operator with a \verb|bool| and an \verb|int| when it requires two \verb|bool|s.
+			\item This expression is not typable because it is a conditional with control paths that are differently typed. One control path has type \verb|int| and the other has type \verb|bool|;
+			\item This expression is typable. $\tau=$ \verb|string|, $v=$ \verb|"true"|.			
+			\item This expression is typable. $\tau=$ \verb|bool|, $v=$ \verb|false|.		
+			\item This expression is not typable because it is trying to use the \verb+<+ operator with a \verb|string| and a \verb|string| when it requires two \verb|int|s.							
+		\end{enumerate}
+\end{homeworkProblem}
+% ---------------------------------------------------------------------------------- %
+\begin{homeworkProblem}
+    \textbf{Question:}
+For each example in the previous problem, logically justify typing using the
+inductive reasoning rules we’ve developed in class and notes. For example, for b we could say say $10
++ 3 : int$ because $10 : int$ and $3 : int$. Note that the larger the expression, the “deeper” your
+justification needs to be.
+
+    \textbf{Solution:}
+		\begin{enumerate}[label=\alph*.]
+			\item \verb|true|: \verb|bool|
+			\item \verb|10 + 3|: \verb|int| because \verb|10|: \verb|int| and \verb|3|: \verb|int|.
+			\item \verb|3 + 2.1|: untypable because \verb|3|: \verb|int| and \verb|2.1|: \verb|float|.
+			\item \verb+false || 0+: untypable because \verb|false|: \verb|bool| and \verb|0|: \verb|int|.
+			\item \verb+if 2 > 4 then 1 else false+: untypable because although \verb|2|: \verb|int| and \verb|4|: \verb|int|, \verb|1|: \verb|int| and \verb|false|: \verb|bool|.
+			\item \verb|if 3 = (1 + 2) then "true" else "not true"|: \verb|string| because \verb|1|: \verb|int| and \verb|2|: \verb|int| so therefore \verb|(1 + 2)|: \verb|int|. \verb|3|: \verb|int| so therefore \verb|3 = (1 + 2)|: \verb|bool|. Finally, \verb|"true"|: \verb|string| and \verb|"not true"|: \verb|string| so therefore the statement type has been inductively proven. 
+			\item This expression is typable. $\tau=$ \verb|bool|, $e=$ \verb|false|.		
+			\item \verb|("a" ^ "c") < "abz"|: untypable because \verb|"a"|: \verb|string| and \verb|"c"|: \verb|string| and so therefore \verb|("a" ^ "c")|: \verb|string| as well as \verb|"abz"|: \verb|string|.
+		\end{enumerate}
+    
+\end{homeworkProblem}
+% ---------------------------------------------------------------------------------- %
+\begin{homeworkProblem}
+    \textbf{Question:}
+For each of the following expressions $e$, decide whether a type can be assigned to
+$e$. If you think $e$ is typable, specify $\tau$ such that $e : \tau$ and specify the precise value $v$ such that $e \Downarrow v$. Justify
+typing of each typable expression as in the previous problem.
+
+    \textbf{Solution:}
+		\begin{enumerate}[label=\alph*.]
+			\item This expression is typable because \verb|1.0|: \verb|float| and \verb|2.0|: \verb|float|. $\tau=$ \verb|bool -> float|, $v=$ \verb|<fun>|.
+			\item This expression is not typable because \verb|1.0|: \verb|float| but \verb|false|: \verb|bool|. 
+			\item This expression is not typable because \verb|2|: \verb|int| but \verb|true|: \verb|bool|.
+			\item This expression is typable because \verb|10|: \verb|int| and \verb|y| can have any type (including int). $\tau=$ \verb|int -> int|, $v=$ \verb|<fun>|.
+		\end{enumerate}
+\end{homeworkProblem}
+% ---------------------------------------------------------------------------------- %
+\begin{homeworkProblem}
+    \textbf{Question:}
+Fibonacci sequence implementation.
+
+    \textbf{Solution:}
+	\begin{verbatim}
+		let rec fibnum = (fun n -> if n = 0 then 0 
+                   else (if n = 1 then 1 
+                      		else fibnum(n-1) + fibnum(n-2)));;
+	\end{verbatim}
+	The base cases are $n=0$ and $n=1$ which return $0$ and $1$ respectively. The recursive case is called for all other values of $n$. The recursive case makes two recursive calls each time. Any negative value will cause this algorithm implementation to diverge since the recursive case will be called and the base cases will never be hit (negative numbers will be decremented). A fix to this would be to implement a greater than or equal to 0 check. 
+    
+\end{homeworkProblem}
+% ---------------------------------------------------------------------------------- %
+\begin{homeworkProblem}
+    \textbf{Question:}
+A predicate on $\tau$ is a function with domain type $\tau$ that returns true or false that is, it is a function of type $\tau$\verb| -> bool|. Define predicates on int named \verb|is_even| and \verb|is_odd|, where \verb|is_even(n)| $\Downarrow$ \verb|true iff n is even|, and \verb|is_odd(n)| $\Downarrow$\verb| true iff n is odd|.
+    
+    \textbf{Solution:}
+	\begin{verbatim}
+	let is_even = (fun n -> (n mod 2) = 0);;
+	let is_odd = (fun n -> not ((n mod 2) = 0));;
+	\end{verbatim}
+    \textit{Note: I could define is\_even or is\_odd in terms of each other (ie is\_even is equal to the logical inversion of is\_odd, but for the sake of them being able to be standalone I have duplicated the mod logic)}.
+\end{homeworkProblem}
+% ---------------------------------------------------------------------------------- %
+\begin{homeworkProblem}
+    \textbf{Question:}Primality Test
+    
+    \textbf{Solution:}
+	\begin{verbatim}
+(*
+is_prime : int -> bool
+in : x > 0
+out : true iff x is prime
+*)
+let is_prime x =
+   (*
+   ip : int -> bool
+   in : y such that 0 < y <= (x/2)
+   out : true iff 1 is the only value between
+   1 and y that divides x
+   *) 
+   let rec ip y = (if y = 1 then true 
+                   else (if x mod y = 0 then false 
+                         else ip(y - 1)
+                        )
+                  )
+   in ip (x / 2);;
+	\end{verbatim}
+    
+\end{homeworkProblem}
+% ---------------------------------------------------------------------------------- %
+\newpage
+\begin{homeworkProblem}
+    \textbf{Question:} Identify each declared variable, along with its scope, in your definition of \verb|is_prime|. You may use informal diagrams, as long as they’re clear.
+    
+    \textbf{Solution:} 
+    
+\end{homeworkProblem}
+% ---------------------------------------------------------------------------------- %
+\end{document}
+
