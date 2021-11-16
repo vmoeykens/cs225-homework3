@@ -34,7 +34,7 @@ let rec redx e = match e with
    | Or(Bool(false), Bool(true)) -> Bool(true)
    | Not(e) -> Not(redx e)
    | And(e1,e2) -> if isval e1 then And(e1, redx e2) else And(redx e1, e2)
-   | Or(e1, e2) -> if isval e1 then Or(e1, redx e2) else Or(redx e1, e2)
+   | Or(e1, e2) -> if isval e1 then (if e1 = Bool(true) then Bool(true) else Or(e1, redx e2)) else Or(redx e1, e2)
 
 (*
    redxs : expr -> expr
