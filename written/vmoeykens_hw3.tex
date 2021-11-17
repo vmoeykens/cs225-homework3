@@ -221,7 +221,7 @@ Recall that in OCaml, record fields can be constructed from expressions that nee
 \begin{homeworkProblem}
     \textbf{Question:} Is your modified interpreter still correct in the sense of Lecture Notes 10, Theorem 1.1? If you say no, provide an example that illustrates the fallacy.
 
-    \textbf{Solution:} Test
+    \textbf{Solution:} Yes, the modified interpreter is still correct according to Theorem 1.1. This is because we can still generate a new expression from \verb|redx| if the expression would normall reduce to another expression. Similarly, we can still reduce any expression to a value with any number of steps using \verb|redxs| if the expression would have reduced to a value. 
 
 \end{homeworkProblem}
 
