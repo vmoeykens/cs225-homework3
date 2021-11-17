@@ -10,6 +10,26 @@
 \usepackage{algpseudocode}
 \usepackage{enumitem}
 \usetikzlibrary{automata,positioning}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{blindtext}
+\usepackage{multicol}
+\setlength{\columnsep}{1cm}
+
+\lstset{
+ language=caml,
+ columns=[c]fixed,
+% basicstyle=\small\ttfamily,
+ keywordstyle=\bfseries,
+ upquote=true,
+ commentstyle=,
+ breaklines=true,
+ showstringspaces=false,
+ stringstyle=\color{blue},
+ literate={'"'}{\textquotesingle "\textquotesingle}3
+}
 
 %
 % Basic Document Settings
@@ -140,127 +160,71 @@
 \pagebreak
 
 \begin{homeworkProblem}
-    \textbf{Question:}
-    Provide a screen shot of the OCaml editor and interpreter combination you are using for the class.
+    \textbf{Question:} Provide a screen shot of the OCaml editor and interpreter combination you are using for the class.
 
-    \textbf{Solution:}
-		My editor is Vim and I am using \verb|utop| on the command line as my interpreter.
+
+    \textbf{Solution:} I am using the Vim editor and the \verb|utop| interpreter. \\
+
+	\includegraphics[scale=0.25]{workflow_screenshot_2.png}
 	
 \end{homeworkProblem}
 % ---------------------------------------------------------------------------------- %
 \begin{homeworkProblem}
     \textbf{Question:}
-For each of the following expressions e, decide whether a type can be assigned to $e$. If you think $e$ is typable, specify $\tau$ such that $e : \tau$ , and also specify $v$ such that $e \Downarrow v;$ otherwise, briefly explain why e cannot be typed.
+Recall that in OCaml, record fields can be constructed from expressions that need to be evaluated. For example, given: \verb|type rt = { a : int; b : int }| we have: \verb|{ a = 1 + 2; b = 3 * 7 }| $\Downarrow$ \verb|{ a = 3; b = 21 }| and it must be the case that either 1 + 2 is evaluated before 3 * 7 or vice-versa in any given implementation. Show which is the case on yours by devising an example that reveals it, and copy-paste or provide a screenshot of your interaction with the interpreter that demonstrates the evidence.\\
+
+
+    \textbf{Solution:}
+    The following code helps demonstrate that the record constructor evaluates right to left. We utilze a reference and a method that takes an integer argument, adds that argument to the current record value, and then returns the record value itself. We then use this method as the value when constructing our record, and we can see that if there was a left to right evaluation order, \verb|a| would be set to \verb|1| since \verb|se| begins as 0, and then \verb|b| would subsequently be set to \verb|3|.
+     \begin{lstlisting}
+		let se = ref 0;;
+		type rt = { a : int; b : int };;
+		let inc x = (se := (x + !se); !se);;
+		{ a = inc 1; b = inc 2; };;
+ 	\end{lstlisting}
+ 	
+ 	Instead, the output we get from the above OCaml code is the following: \\
+ 	\verb|- : rt = {a = 3; b = 2}|\\
+ 	This shows us that \verb|b| is evaluated first, and sets the record to 2, and then \verb|a| is evaluated, and is set to 3.
+
+\end{homeworkProblem}
+% ---------------------------------------------------------------------------------- %
+\begin{homeworkProblem}
+    \textbf{Question:} Suppose you wanted to add an xor operation as a primitive to BOOL. To accomplish this, do the following: \\
+    a. Propose a symbol for xor and extend the BOOL language of expressions to admit it as a binary operation\\
+    b. Extend the computational and contextual reduction rules of BOOL to provide an operational semantics for xor. You can specify either a left-to-right or right-to-left reduction semantics, but your semantics should be deterministic in the sense of Lecture Notes 9, Proposition 1.1.\\
 
     \textbf{Solution:}
 		\begin{enumerate}[label=\alph*.]
-			\item This expression is typable. $\tau=$ \verb|bool|, $v=$ \verb|true|.
-			\item This expression is typable. $\tau=$ \verb|int|, $v=$ \verb|13|.
-			\item This expression is not typable because it is trying to use the \verb|+| operator with an \verb|int| and a \verb|float| when it requires two \verb|int|s.
-			\item This expression is not typable because it is trying to use the \verb+||+ operator with a \verb|bool| and an \verb|int| when it requires two \verb|bool|s.
-			\item This expression is not typable because it is a conditional with control paths that are differently typed. One control path has type \verb|int| and the other has type \verb|bool|;
-			\item This expression is typable. $\tau=$ \verb|string|, $v=$ \verb|"true"|.			
-			\item This expression is typable. $\tau=$ \verb|bool|, $v=$ \verb|false|.		
-			\item This expression is not typable because it is trying to use the \verb+<+ operator with a \verb|string| and a \verb|string| when it requires two \verb|int|s.							
+			\item The proposed symbol for xor is "Xor". The new BOOL:
+				\begin{align*}
+					v &\quad::= \text{True | False} &\quad values \\
+					e &\quad::= v \text{ | }e \text{ And } e \text{ | } e \text{ Or } e \text{ | } \text{ Not } e \text{ | } (e) \text{ | } e\text{ Xor } e&\quad expressions \\
+				\end{align*}
+			\item Our additional computational rules are as follows:
+				\begin{align*}
+					\textbf{Xor1} &\quad \textbf{Xor2}  \\
+					\text{True Xor False}\rightarrow\text{True} &\quad \text{False Xor True}\rightarrow\text{True}
+				\end{align*}
+				\begin{align*}
+					\textbf{Xor3} &\quad \textbf{Xor4} \\
+					\text{False Xor False}\rightarrow\text{False} &\quad \text{True Xor True}\rightarrow\text{False}
+				\end{align*}
+				Our additional contextual rules are as follows:
+				\begin{align*}
+					\textbf{XorCL} &\quad \textbf{XorCR}  \\
+					\frac{e_1\rightarrow e_1'}{e_1\text{ Xor }e_2\rightarrow e_1'\text{ Xor }e_2} &\quad \frac{e\rightarrow e'}{v\text{ Xor }e\rightarrow v\text{ Xor }e'}
+				\end{align*}
 		\end{enumerate}
 \end{homeworkProblem}
 % ---------------------------------------------------------------------------------- %
 \begin{homeworkProblem}
-    \textbf{Question:}
-For each example in the previous problem, logically justify typing using the
-inductive reasoning rules we’ve developed in class and notes. For example, for b we could say say $10
-+ 3 : int$ because $10 : int$ and $3 : int$. Note that the larger the expression, the “deeper” your
-justification needs to be.
+    \textbf{Question:} Is your modified interpreter still correct in the sense of Lecture Notes 10, Theorem 1.1? If you say no, provide an example that illustrates the fallacy.
 
-    \textbf{Solution:}
-		\begin{enumerate}[label=\alph*.]
-			\item \verb|true|: \verb|bool|
-			\item \verb|10 + 3|: \verb|int| because \verb|10|: \verb|int| and \verb|3|: \verb|int|.
-			\item \verb|3 + 2.1|: untypable because \verb|3|: \verb|int| and \verb|2.1|: \verb|float|.
-			\item \verb+false || 0+: untypable because \verb|false|: \verb|bool| and \verb|0|: \verb|int|.
-			\item \verb+if 2 > 4 then 1 else false+: untypable because although \verb|2|: \verb|int| and \verb|4|: \verb|int|, \verb|1|: \verb|int| and \verb|false|: \verb|bool|.
-			\item \verb|if 3 = (1 + 2) then "true" else "not true"|: \verb|string| because \verb|1|: \verb|int| and \verb|2|: \verb|int| so therefore \verb|(1 + 2)|: \verb|int|. \verb|3|: \verb|int| so therefore \verb|3 = (1 + 2)|: \verb|bool|. Finally, \verb|"true"|: \verb|string| and \verb|"not true"|: \verb|string| so therefore the statement type has been inductively proven. 
-			\item This expression is typable. $\tau=$ \verb|bool|, $e=$ \verb|false|.		
-			\item \verb|("a" ^ "c") < "abz"|: untypable because \verb|"a"|: \verb|string| and \verb|"c"|: \verb|string| and so therefore \verb|("a" ^ "c")|: \verb|string| as well as \verb|"abz"|: \verb|string|.
-		\end{enumerate}
-    
-\end{homeworkProblem}
-% ---------------------------------------------------------------------------------- %
-\begin{homeworkProblem}
-    \textbf{Question:}
-For each of the following expressions $e$, decide whether a type can be assigned to
-$e$. If you think $e$ is typable, specify $\tau$ such that $e : \tau$ and specify the precise value $v$ such that $e \Downarrow v$. Justify
-typing of each typable expression as in the previous problem.
+    \textbf{Solution:} Test
 
-    \textbf{Solution:}
-		\begin{enumerate}[label=\alph*.]
-			\item This expression is typable because \verb|1.0|: \verb|float| and \verb|2.0|: \verb|float|. $\tau=$ \verb|bool -> float|, $v=$ \verb|<fun>|.
-			\item This expression is not typable because \verb|1.0|: \verb|float| but \verb|false|: \verb|bool|. 
-			\item This expression is not typable because \verb|2|: \verb|int| but \verb|true|: \verb|bool|.
-			\item This expression is typable because \verb|10|: \verb|int| and \verb|y| can have any type (including int). $\tau=$ \verb|int -> int|, $v=$ \verb|<fun>|.
-		\end{enumerate}
 \end{homeworkProblem}
-% ---------------------------------------------------------------------------------- %
-\begin{homeworkProblem}
-    \textbf{Question:}
-Fibonacci sequence implementation.
 
-    \textbf{Solution:}
-	\begin{verbatim}
-		let rec fibnum = (fun n -> if n = 0 then 0 
-                   else (if n = 1 then 1 
-                      		else fibnum(n-1) + fibnum(n-2)));;
-	\end{verbatim}
-	The base cases are $n=0$ and $n=1$ which return $0$ and $1$ respectively. The recursive case is called for all other values of $n$. The recursive case makes two recursive calls each time. Any negative value will cause this algorithm implementation to diverge since the recursive case will be called and the base cases will never be hit (negative numbers will be decremented). A fix to this would be to implement a greater than or equal to 0 check. 
-    
-\end{homeworkProblem}
-% ---------------------------------------------------------------------------------- %
-\begin{homeworkProblem}
-    \textbf{Question:}
-A predicate on $\tau$ is a function with domain type $\tau$ that returns true or false that is, it is a function of type $\tau$\verb| -> bool|. Define predicates on int named \verb|is_even| and \verb|is_odd|, where \verb|is_even(n)| $\Downarrow$ \verb|true iff n is even|, and \verb|is_odd(n)| $\Downarrow$\verb| true iff n is odd|.
-    
-    \textbf{Solution:}
-	\begin{verbatim}
-	let is_even = (fun n -> (n mod 2) = 0);;
-	let is_odd = (fun n -> not ((n mod 2) = 0));;
-	\end{verbatim}
-    \textit{Note: I could define is\_even or is\_odd in terms of each other (ie is\_even is equal to the logical inversion of is\_odd, but for the sake of them being able to be standalone I have duplicated the mod logic)}.
-\end{homeworkProblem}
-% ---------------------------------------------------------------------------------- %
-\begin{homeworkProblem}
-    \textbf{Question:}Primality Test
-    
-    \textbf{Solution:}
-	\begin{verbatim}
-(*
-is_prime : int -> bool
-in : x > 0
-out : true iff x is prime
-*)
-let is_prime x =
-   (*
-   ip : int -> bool
-   in : y such that 0 < y <= (x/2)
-   out : true iff 1 is the only value between
-   1 and y that divides x
-   *) 
-   let rec ip y = (if y = 1 then true 
-                   else (if x mod y = 0 then false 
-                         else ip(y - 1)
-                        )
-                  )
-   in ip (x / 2);;
-	\end{verbatim}
-    
-\end{homeworkProblem}
-% ---------------------------------------------------------------------------------- %
-\newpage
-\begin{homeworkProblem}
-    \textbf{Question:} Identify each declared variable, along with its scope, in your definition of \verb|is_prime|. You may use informal diagrams, as long as they’re clear.
-    
-    \textbf{Solution:} 
-    
-\end{homeworkProblem}
 % ---------------------------------------------------------------------------------- %
 \end{document}
 
